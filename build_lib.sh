@@ -3,15 +3,16 @@
 cd ./src/
 rm *.o
 rm librndmesh.a
-g++ -c rmesh.cpp
+
+g++ -c rndmesh.cpp
 gfortran -c stripack.f90
 g++ -c random.cpp
 g++ -c mc.c
 
-ar -rcs librndmesh.a rmesh.o stripack.o mc.o random.o
+ar -rcs librndmesh.a rndmesh.o stripack.o mc.o random.o
 ranlib librndmesh.a
+sudo cp librndmesh.a /usr/local/lib
+sudo cp rndmesh.h /usr/local/include
 
-sudo cp libsteinhardt.a /usr/local/lib
-$ sudo cp steinhardt.h /usr/local/include
-
-#g++ -o test main.o stripack.o mc.o random.o -std=gnu++11 -lgfortran
+cd ..
+g++ -o rndmesh_test main.cpp -std=gnu++11 -Isrc/ -lrndmesh -lgfortran

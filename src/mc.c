@@ -112,10 +112,10 @@ double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int
              dz = z[i] - z[j];
              r = dx*dx + dy*dy + dz*dz;
              r = sqrt(r);
-             if (r < 0.001)
-             {
-                  r = 0.001;
-             }
+//             if (r < 0.001)
+//             {
+//                  r = 0.001;
+//             }
              sigm_by_r12 = pow( (sigma/r) , power );
              en += eps * sigm_by_r12;
        }
@@ -142,10 +142,10 @@ double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, d
           dz = z[i] - z[idx];
           r = dx*dx + dy*dy + dz*dz;
           r = sqrt(r);
-          if (r < 0.001)
-          {
-              r = 0.001;
-          }
+//          if (r < 0.001)
+//          {
+//              r = 0.001;
+//          }
           sigm_by_r12 = pow( (sigma/r) , power );
           en += eps * sigm_by_r12;
       }
@@ -172,6 +172,7 @@ void run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_an
     {  
         acc = 0;
 
+        std::cerr << "Anneal step: " << (i+1) << " out of:" << n_anneals << std::endl;
         for(int j = 0; j < n_steps; j ++)
         {
             energy = mc_step(x, y, z, n, sigma, T, acc, 12);

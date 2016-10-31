@@ -1,4 +1,4 @@
-#include "rmesh.h"
+#include "rndmesh.h"
 
 void generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_)
 {
@@ -38,10 +38,10 @@ void generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, do
     generate_n_random(n_, x_vec, y_vec, z_vec);
     run_annealing(x_vec, y_vec, z_vec, n_, n_steps, n_anneals, Tmin, Tmax, sigma);
 
-//    for (int i = 0; i < n_anneal; i++)
-//    {
-//        cout << "H "<< x_anneal[i] << " " << y_anneal[i] << " " << z_anneal[i]<< "\n";
-//    }
+    for (int i = 0; i < n_; i++)
+    {
+        std::cout << "H "<< x_vec[i] << " " << y_vec[i] << " " << z_vec[i]<< "\n";
+    }
 
 /*
     for (int i = 0; i < *n ; i++)
@@ -76,15 +76,15 @@ void generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, do
     trmesh_( n, x_vec, y_vec, z_vec, list, lptr, lend, lnew, near, next, dist, ier );
     trlist_( n, list, lptr, lend, nrow, nt, ltri, ier );
 
-//    cout << "  Number of triangles = " << *nt << endl;
-//    cout << "   " << endl;
-//    cout << "    Check Euler''s formula:" << endl;
-//    cout << "   " << endl;
-//    cout << "    Faces =    " << *nt << endl;
-//    cout << "    Vertices = " <<  *n << endl;
-//    cout << "    Edges =    " << ( 3 * *nt ) / 2 << endl;
-//    cout << "   " << endl;
-//    cout << "    F+V-E-2 =  " <<  *nt + *n - ( ( 3 * (*nt) ) / 2 ) - 2 << endl;
+//    std::cout << "  Number of triangles = " << *nt << std::endl;
+//    std::cout << "   " << std::endl;
+//    std::cout << "    Check Euler''s formula:" << std::endl;
+//    std::cout << "   " << std::endl;
+//    std::cout << "    Faces =    " << *nt << std::endl;
+//    std::cout << "    Vertices = " <<  *n << std::endl;
+//    std::cout << "    Edges =    " << ( 3 * *nt ) / 2 << std::endl;
+//    std::cout << "   " << std::endl;
+//    std::cout << "    F+V-E-2 =  " <<  *nt + *n - ( ( 3 * (*nt) ) / 2 ) - 2 << std::endl;
 
 
 //    cout << "PRINT TRIANGLES" << endl;

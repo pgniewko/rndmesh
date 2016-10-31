@@ -6866,12 +6866,7 @@ subroutine trmesh ( n, x, y, z, list, lptr, lend, lnew, near, next, dist, ier )
   real ( kind = 8 ) z(n)
 
   nn = n
-
-    write ( *, '(a,i8)' ) '  n = ', n
-    write ( *, '(a,i8)' ) '  lnew = ', lnew
-    lnew=7
-    write ( *, '(a,i8)' ) '  lnew = ', lnew
-  write ( *, '(a)' ) 'jedziemy 1'
+  lnew=7
   if ( nn < 3 ) then
     ier = -1
     write ( *, '(a)' ) ' '
@@ -6942,17 +6937,15 @@ subroutine trmesh ( n, x, y, z, list, lptr, lend, lnew, near, next, dist, ier )
     stop
 
   end if
-  write ( *, '(a)' ) 'jedziemy 2'
+
 !
 !  Initialize LNEW and test for N = 3.
 !
   lnew = 7
-  write ( *, '(a)' ) 'jedziemy 2.5'
   if ( nn == 3 ) then
     ier = 0
     return
   end if
-  write ( *, '(a)' ) 'jedziemy 3'
 !
 !  A nearest-node data structure (NEAR, NEXT, and DIST) is
 !  used to obtain an expected-time (N*log(N)) incremental
@@ -7008,7 +7001,6 @@ subroutine trmesh ( n, x, y, z, list, lptr, lend, lnew, near, next, dist, ier )
     end if
 
   end do
-  write ( *, '(a)' ) 'jedziemy 4'
 !
 !  Add the remaining nodes.
 !
@@ -7118,7 +7110,6 @@ subroutine trmesh ( n, x, y, z, list, lptr, lend, lnew, near, next, dist, ier )
 6   continue
 
   end do
-  write ( *, '(a)' ) 'jedziemy - last'
   return
 end
 subroutine trplot ( lun, pltsiz, elat, elon, a, n, x, y, z, list, lptr, &

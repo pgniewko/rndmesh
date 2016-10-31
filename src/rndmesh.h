@@ -1,0 +1,26 @@
+#ifndef RMESH_H
+#define RMESH_H
+
+#include <iostream>
+#include <cstdlib>
+#include <math.h>
+#include "mc.h"
+
+
+#ifdef __cplusplus
+extern"C" {
+#endif
+
+void trmesh_(int *n, double *x, double *y, double *z, int *list, int *lptr, int *lend, int *lnew, int *near, int *next, double *dist, int *ier );
+void trlist_(int *n, int *list, int *lptr, int *lend, int* nrow, int* nt, int* ltri, int* ier );
+
+
+void generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif  /* RMESH_H */
+
+

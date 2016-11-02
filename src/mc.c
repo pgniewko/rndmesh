@@ -55,8 +55,7 @@ void generate_n_random(int n, double* xv, double* yv, double* zv)
 
 double mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
 {
-    //double energy = 0.0;
-    double energy = calc_rep_energy( x,  y, z, n, sigma, power);
+    double energy = 0.0;
     int pidx = -1;
     double enix_before = 0.0;
     double enix_after = 0.0;
@@ -82,7 +81,7 @@ double mc_step(double* x, double* y, double* z, int n, double sigma, double T, i
         if (p < acc)
         {
             counter++;
-            energy += dE;
+ //           energy += dE;
         }
         else
         {
@@ -92,7 +91,7 @@ double mc_step(double* x, double* y, double* z, int n, double sigma, double T, i
         }
     }
 
-    std::cerr << "E = " << energy << std::endl;
+//    std::cerr << "E = " << energy << std::endl;
     return energy;
 }
 
@@ -174,17 +173,20 @@ void run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_an
     {  
         acc = 0;
 
-        std::cerr << "Anneal step: " << (i+1) << " out of:" << n_anneals << std::endl;
         for(int j = 0; j < n_steps; j ++)
         {
             energy = mc_step(x, y, z, n, sigma, T, acc, 12);
         }
-
-         std::cout << n << "\n";
-         for (int ix = 0; ix < n; ix++)
-         {
+        
+        energy = calc_rep_energy( x,  y, z, n, sigma, 12);
+        std::cerr << "Anneal step: " << (i+1) << " out of:" << n_anneals << " energy = " << energy << std::endl;
+        
+         
+        std::cout << n << "\n";
+        for (int ix = 0; ix < n; ix++)
+        {
              std::cout << "H "<< x[ix] << " " << y[ix] << " " << z[ix]<< "\n";
-         }
+        }
 
         T = Tmax * exp(-mult_T * i);
     }

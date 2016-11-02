@@ -145,10 +145,11 @@ void generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, do
     trmesh_( n, x_vec, y_vec, z_vec, list, lptr, lend, lnew, near, next, dist, ier );
     trlist_( n, list, lptr, lend, nrow, nt, ltri, ier );
 
-    //    for (int i = 0; i < 2*(*n-2);i++)
-//    {
-//        cout <<  ltri[6*i + 0] << " " << ltri[6*i + 1] << " "<< ltri[6*i + 2] << "||" <<  ltri[6*i + 3] << " " << ltri[6*i + 4] << " "<< ltri[6*i + 5]  << endl;
-//    }
+    std::cout << " nt = " << nt <<  " 2 * (*n - 2)" <<  2 * (*n-2)   << std::endl;
+    for (int i = 0; i < 2*(*n - 2);i++)
+    {
+        std::cout <<  ltri[6*i + 0] << " " << ltri[6*i + 1] << " "<< ltri[6*i + 2] << "||" <<  ltri[6*i + 3] << " " << ltri[6*i + 4] << " "<< ltri[6*i + 5]  << std::endl;
+    }
 
 
     delete n;

@@ -179,14 +179,13 @@ void run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_an
         }
         
         energy = calc_rep_energy( x,  y, z, n, sigma, 12);
-        std::cerr << "Anneal step: " << (i+1) << " out of:" << n_anneals << " energy = " << energy << std::endl;
-        
+//        std::cerr << "Anneal step: " << (i+1) << " out of:" << n_anneals << " energy = " << energy << std::endl;
          
-        std::cout << n << "\n";
-        for (int ix = 0; ix < n; ix++)
-        {
-             std::cout << "H "<< x[ix] << " " << y[ix] << " " << z[ix]<< "\n";
-        }
+//        std::cout << n << "\n";
+//        for (int ix = 0; ix < n; ix++)
+//        {
+//             std::cout << "H "<< x[ix] << " " << y[ix] << " " << z[ix]<< "\n";
+//        }
 
         T = Tmax * exp(-mult_T * i);
     }

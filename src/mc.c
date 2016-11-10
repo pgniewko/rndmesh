@@ -75,10 +75,8 @@ void generate_n_random(int n, double* xv, double* yv, double* zv)
     return;
 }
 
-double mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
+void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
 {
-    //double energy = 0.0;
-    double energy = calc_rep_energy( x,  y, z, n, sigma, power);
     int pidx = -1;
     double enix_before = 0.0;
     double enix_after = 0.0;
@@ -105,7 +103,6 @@ double mc_step(double* x, double* y, double* z, int n, double sigma, double T, i
         if (p < acc)
         {
             counter++;
-            energy += dE;
         }
         else
         {
@@ -115,8 +112,7 @@ double mc_step(double* x, double* y, double* z, int n, double sigma, double T, i
         }
     }
 
-    std::cerr << "E = " << energy << std::endl;
-    return energy;
+    return;
 }
 
 double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int power)
@@ -137,10 +133,6 @@ double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int
              dz = z[i] - z[j];
              r = dx*dx + dy*dy + dz*dz;
              r = sqrt(r);
-//             if (r < 0.001)
-//             {
-//                  r = 0.001;
-//             }
              sigm_by_r12 = pow( (sigma/r) , power );
              en += eps * sigm_by_r12;
        }
@@ -167,10 +159,6 @@ double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, d
           dz = z[i] - z[idx];
           r = dx*dx + dy*dy + dz*dz;
           r = sqrt(r);
-//          if (r < 0.001)
-//          {
-//              r = 0.001;
-//          }
           sigm_by_r12 = pow( (sigma/r) , power );
           en += eps * sigm_by_r12;
       }
@@ -179,36 +167,30 @@ double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, d
    return en;
 }
 
-void run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_anneals, double Tmin, double Tmax, double sigma)
+double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_anneals, double Tmin, double Tmax, double sigma)
 {
     double mult_T = log(Tmax / Tmin) / (n_anneals - 1);
     double T = Tmax;
  
     int acc = 0;
-    double energy, energy_check;
-
 
     for(int power_index = 1; power_index < 12; power_index++)
     {
-        energy = mc_step(x, y, z, n, sigma, T, acc, power_index);
+        mc_step(x, y, z, n, sigma, T, acc, power_index);
     }
 
     for (int i = 0; i < n_anneals; i++)
     {  
         acc = 0;
 
-        std::cerr << "Anneal step: " << (i+1) << " out of:" << n_anneals << std::endl;
         for(int j = 0; j < n_steps; j ++)
         {
-            energy = mc_step(x, y, z, n, sigma, T, acc, 12);
+            mc_step(x, y, z, n, sigma, T, acc, 12);
         }
-
-         std::cout << n << "\n";
-         for (int ix = 0; ix < n; ix++)
-         {
-             std::cout << "H "<< x[ix] << " " << y[ix] << " " << z[ix]<< "\n";
-         }
 
         T = Tmax * exp(-mult_T * i);
     }
+    
+    double energy = calc_rep_energy(x, y, z, n, sigma, 12);
+    return energy;
 }

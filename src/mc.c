@@ -5,6 +5,26 @@ int rand_int(int a, int b)
    return (int)( (b - a + 1) * uniform() ) + a;
 }
 
+
+void small_displacement(double* x, double* y, double* z)
+{
+
+   *x += uniform(-0.05, 0.05);
+   *y += uniform(-0.05, 0.05);
+   *z += uniform(-0.05, 0.05);
+
+   double dx_2, dy_2, dz_2, r;
+   dx_2 = (*x)*(*x);
+   dy_2 = (*y)*(*y);
+   dz_2 = (*z)*(*z);
+   
+   r = sqrt(dx_2 + dy_2 +  dz_2);
+   *x /= r;
+   *y /= r;
+   *z /= r;
+   return;
+}
+
 void random_rotation(double* x, double* y, double* z)
 {
     double xi = 1.0;
@@ -43,6 +63,7 @@ void random_rotation(double* x, double* y, double* z)
     *x = xnew;
     *y = ynew;
     *z = znew;
+    return;
 }
 
 void generate_n_random(int n, double* xv, double* yv, double* zv)
@@ -51,6 +72,7 @@ void generate_n_random(int n, double* xv, double* yv, double* zv)
     {
          random_rotation(&xv[i], &yv[i], &zv[i]);
     }
+    return;
 }
 
 double mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
@@ -73,7 +95,8 @@ double mc_step(double* x, double* y, double* z, int n, double sigma, double T, i
         x_old = x[pidx];
         y_old = y[pidx];
         z_old = z[pidx];
-        random_rotation(&x[pidx], &y[pidx], &z[pidx]);
+//        random_rotation(&x[pidx], &y[pidx], &z[pidx]);
+        small_displacement(&x[pidx], &y[pidx], &z[pidx]);
         enix_after = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power);
         dE = enix_after - enix_before;
 

@@ -10,7 +10,8 @@
 extern "C" {
 #endif
 
-void random_rotation(double* x, double*, double* z);
+void random_rotation(double* x, double* y, double* z);
+void small_displacement(double* x, double* y, double* z);
 void generate_n_random(int n, double* x, double* y, double* z);
 double mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power);
 

@@ -9,9 +9,9 @@ int rand_int(int a, int b)
 void small_displacement(double* x, double* y, double* z)
 {
 
-   *x += uniform(-0.05, 0.05);
-   *y += uniform(-0.05, 0.05);
-   *z += uniform(-0.05, 0.05);
+   *x += uniform(-0.025, 0.025);
+   *y += uniform(-0.025, 0.025);
+   *z += uniform(-0.025, 0.025);
 
    double dx_2, dy_2, dz_2, r;
    dx_2 = (*x)*(*x);

@@ -3,6 +3,10 @@
 
 int main(int argc, char** argv)
 {
+
+    srand (time(NULL));
+    unsigned long init[4]={(unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand()}, length=4;
+    init_by_array(init, length);
     
     int n_ = atoi (argv[1]);
     int n_steps = atoi (argv[2]);

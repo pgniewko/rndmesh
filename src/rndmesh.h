@@ -19,6 +19,9 @@ double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, 
 double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_);
 void traingulate_points(int n_, double* xyz, int* ltri);
 
+double calcQl(double *x, double *y, double *z, int l, double r);
+double calcWl(double *x, double *y, double *z, int l, double r);
+
 #ifdef __cplusplus
 }
 #endif

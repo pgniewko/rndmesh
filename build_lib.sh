@@ -17,4 +17,4 @@ sudo cp mc.h /usr/local/include
 sudo cp random.h /usr/local/include
 
 cd ..
-g++-4.9 -o rndmesh_test main.cpp -std=gnu++11 -Isrc/ -lrndmesh -lgfortran
+g++-4.9 -o run_rndmesh main.cpp -std=gnu++11 -Isrc/ -lrndmesh -lgfortran

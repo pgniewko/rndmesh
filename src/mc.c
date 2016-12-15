@@ -5,13 +5,12 @@ int rand_int(int a, int b)
    return (int)( (b - a + 1) * uniform() ) + a;
 }
 
-
-void small_displacement(double* x, double* y, double* z)
+void small_displacement(double* x, double* y, double* z, double sigma)
 {
-
-   *x += uniform(-0.025, 0.025);
-   *y += uniform(-0.025, 0.025);
-   *z += uniform(-0.025, 0.025);
+   double del_ = 0.25 * sigma;
+   *x += uniform(-del_, del_);
+   *y += uniform(-del_, del_);
+   *z += uniform(-del_, del_);
 
    double dx_2, dy_2, dz_2, r;
    dx_2 = (*x)*(*x);
@@ -94,7 +93,7 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
         y_old = y[pidx];
         z_old = z[pidx];
 //        random_rotation(&x[pidx], &y[pidx], &z[pidx]);
-        small_displacement(&x[pidx], &y[pidx], &z[pidx]);
+        small_displacement(&x[pidx], &y[pidx], &z[pidx], sigma);
         enix_after = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power);
         dE = enix_after - enix_before;
 
@@ -132,7 +131,7 @@ double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int
              dy = y[i] - y[j];
              dz = z[i] - z[j];
              r = dx*dx + dy*dy + dz*dz;
-             r = sqrt(r);
+             r = fastmath::fast_sqrt(r);
              sigm_by_r12 = pow( (sigma/r) , power );
              en += eps * sigm_by_r12;
        }
@@ -158,7 +157,7 @@ double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, d
           dy = y[i] - y[idx];
           dz = z[i] - z[idx];
           r = dx*dx + dy*dy + dz*dz;
-          r = sqrt(r);
+          r = fastmath::fast_sqrt(r);
           sigm_by_r12 = pow( (sigma/r) , power );
           en += eps * sigm_by_r12;
       }

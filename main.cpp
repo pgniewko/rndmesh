@@ -14,7 +14,14 @@ int main(int argc, char** argv)
     double T_min = strtod( argv[4], NULL ) ;
     double T_max = strtod( argv[5], NULL );
     double scaled_sigma = strtod( argv[6], NULL );
-   
+
+    int nrow = 6;
+    double* xyz = new double[3 * n_];
+    int* ltri = new int[nrow * 2 * (n_ - 2)];
+    
+    double energy;
+  
+
     std::cerr << "n = " << n_ << std::endl;
     std::cerr << "n_steps = " << n_steps << std::endl;
     std::cerr << "n_anneals = " << n_anneals << std::endl;
@@ -22,14 +29,11 @@ int main(int argc, char** argv)
     std::cerr << "T_max = " << T_max << std::endl;
     std::cerr << "scaled_sigma = " << scaled_sigma << std::endl;
     
-    int nrow = 6;
-    double* xyz = new double[3 * n_];
-    int* ltri = new int[nrow * 2 * (n_ - 2)];
-   
 
-    double energy = generate_random_points(n_, xyz, n_steps, n_anneals, T_min, T_max, scaled_sigma);
+    energy = generate_random_points(n_, xyz, n_steps, n_anneals, T_min, T_max, scaled_sigma);
     traingulate_points(n_, xyz, ltri);
 
+    
     double* x_vec = new double[n_];
     double* y_vec = new double[n_];
     double* z_vec = new double[n_];

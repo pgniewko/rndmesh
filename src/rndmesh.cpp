@@ -151,15 +151,3 @@ double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, 
 
     return energy;
 }
-
-double calcQl(double *x, double *y, double *z, int l, double r)
-{
-    return 0.0;
-}
-
-
-double calcWl(double *x, double *y, double *z, int l, double r)
-{
-    return 0.0;
-}
-

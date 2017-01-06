@@ -1,7 +1,7 @@
 DESCRIPTION
 ==================================================
-The ```rndmesh``` library, using Simulated Annealing, generates points on a sphere and
-then triangulates the surface with the vertices defined by those points.
+The ```rndmesh``` library, using Simulated Annealing Monta Carlo, generates points on a sphere and
+triangulates the surface with the vertices defined by those points.
 
 
 GETTING THE CODE
@@ -29,7 +29,6 @@ apt-get install gfortran
 ```
 ./build_lib.sh
 ```
-
 
 USAGE
 =====

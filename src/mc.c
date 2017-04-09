@@ -184,12 +184,12 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
 
         for(int j = 0; j < n_steps; j ++)
         {
-            mc_step(x, y, z, n, sigma, T, acc, 6); //12);
+            mc_step(x, y, z, n, sigma, T, acc, 12);
         }
 
         T = Tmax * exp(-mult_T * i);
     }
     
-    double energy = calc_rep_energy(x, y, z, n, sigma, 6); //12);
+    double energy = calc_rep_energy(x, y, z, n, sigma, 12);
     return energy;
 }

@@ -8,9 +8,10 @@ STATIC		:=librndmesh.a
 EXE			:=run_rndmesh
 
 SRC			:=./src
+INCLUDE     :=/Users/pawel/include
 
-CFLAGS 		:= -O3
-CXXFLAGS	:= -O3 -std=gnu++11
+CFLAGS 		:= -O3 -I$(INCLUDE)
+CXXFLAGS	:= -O3 -std=gnu++11 -I$(INCLUDE)
 LDLIBS   	:= -lrndmesh -lgfortran
 
 SOURCES	     := $(shell find $(SRC) -type f -name "*.cpp" -or -name "*.c" -or -name "*.f90")

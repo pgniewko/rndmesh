@@ -7,21 +7,21 @@ int rand_int(int a, int b)
 
 void small_displacement(double* x, double* y, double* z, double sigma)
 {
-   double del_ = 0.25 * sigma;
-   *x += uniform(-del_, del_);
-   *y += uniform(-del_, del_);
-   *z += uniform(-del_, del_);
+    double del_ = 0.25 * sigma;
+    *x += uniform(-del_, del_);
+    *y += uniform(-del_, del_);
+    *z += uniform(-del_, del_);
 
-   double dx_2, dy_2, dz_2, r;
-   dx_2 = (*x)*(*x);
-   dy_2 = (*y)*(*y);
-   dz_2 = (*z)*(*z);
+    double dx_2, dy_2, dz_2, r;
+    dx_2 = (*x)*(*x);
+    dy_2 = (*y)*(*y);
+    dz_2 = (*z)*(*z);
    
-   r = sqrt(dx_2 + dy_2 +  dz_2);
-   *x /= r;
-   *y /= r;
-   *z /= r;
-   return;
+    r = sqrt(dx_2 + dy_2 +  dz_2);
+    *x /= r;
+    *y /= r;
+    *z /= r;
+    return;
 }
 
 void random_rotation(double* x, double* y, double* z)
@@ -76,11 +76,10 @@ void generate_n_random(int n, double* xv, double* yv, double* zv)
 
 void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
 {
-    int pidx = -1;
+    int pidx;
     double enix_before = 0.0;
     double enix_after = 0.0;
-    double dE;
-    double x_old, y_old, z_old;
+    double x_old, y_old, z_old, dE;
 
     double acc, p;
 
@@ -115,55 +114,56 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
 }
 
 double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int power)
-{
-   double en = 0.0;
-   double eps = 1.0;
- 
-   double r = 0.0;
-   double dx, dy, dz;
-   double sigm_by_r12;   
+{  
+    double en = 0.0;
+    for (int i = 0; i < n; i++)
+    {
+        en += 0.5 * calc_atomic_rep_energy( x, y, z, n, i, sigma, power );
+    }
 
-   for (int i = 0; i < n; i++)
-   {
-       for (int j = i + 1; j < n; j++)
-       {
-             dx = x[i] - x[j];
-             dy = y[i] - y[j];
-             dz = z[i] - z[j];
-             r = dx*dx + dy*dy + dz*dz;
-             r = fastmath::fast_sqrt(r);
-             sigm_by_r12 = pow( (sigma/r) , power );
-             en += eps * sigm_by_r12;
-       }
-   }
-
-   return en;
+    return en;
 }
 
 double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, double sigma, int power)
 {
-   double en = 0.0;
-   double eps = 1.0;
+    int power_by_2 = power / 2;
+        
+    double en = 0.0;
+    double eps = 1.0;
  
-   double r = 0.0;
-   double dx, dy, dz;
-   double sigm_by_r12;   
+    double r2 = 0.0;
+    double dx, dy, dz;
+    double sigm_by_r_pow;
+    double sigma2 = sigma*sigma;
 
-   for (int i = 0; i < n; i++)
-   {
-      if (i != idx )
-      {
-          dx = x[i] - x[idx];
-          dy = y[i] - y[idx];
-          dz = z[i] - z[idx];
-          r = dx*dx + dy*dy + dz*dz;
-          r = fastmath::fast_sqrt(r);
-          sigm_by_r12 = pow( (sigma/r) , power );
-          en += eps * sigm_by_r12;
-      }
-   }
+    double rc = 3.0*sigma;
+    double rc2 = rc*rc;
+    double Vc = pow( (sigma2 / rc2) , power_by_2);
 
-   return en;
+    for (int i = 0; i < n; i++)
+    {
+       if (i != idx )
+       {
+            dx = x[i] - x[idx];
+            r2 = dx*dx;
+            if (r2 >= rc2)
+                continue;
+            dy = y[i] - y[idx];
+            r2 += dy*dy;
+            if (r2 >= rc2)
+                continue;
+            dz = z[i] - z[idx];
+            r2 += dz*dz;
+            if (r2 >= rc2)
+                continue;
+
+            sigm_by_r_pow = pow( (sigma2 / r2) , power_by_2 ) - Vc;
+            en += sigm_by_r_pow;
+       }
+    }
+    
+    en *= eps;
+    return en;
 }
 
 double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_anneals, double Tmin, double Tmax, double sigma)
@@ -173,15 +173,9 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
  
     int acc = 0;
 
-    for(int power_index = 1; power_index < 12; power_index++)
-    {
-        mc_step(x, y, z, n, sigma, T, acc, power_index);
-    }
-
     for (int i = 0; i < n_anneals; i++)
     {  
         acc = 0;
-
         for(int j = 0; j < n_steps; j ++)
         {
             mc_step(x, y, z, n, sigma, T, acc, 8);
@@ -190,6 +184,5 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
         T = Tmax * exp(-mult_T * i);
     }
     
-    double energy = calc_rep_energy(x, y, z, n, sigma, 8);
-    return energy;
+    return calc_rep_energy(x, y, z, n, sigma, 8);
 }

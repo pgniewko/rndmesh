@@ -5,7 +5,6 @@
 #include <math.h>
 #include <algorithm>
 #include "random.h"
-#include "fastmath.h"
 
 #ifdef __cplusplus
 extern "C" {

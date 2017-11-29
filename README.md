@@ -1,6 +1,6 @@
 DESCRIPTION
 ==================================================
-The ```rndmesh``` library, using Simulated Annealing Monta Carlo, generates points on a sphere and
+The ```rndmesh``` library, using Simulated Annealing Monte Carlo, generates points on a sphere and
 triangulates the surface with the vertices defined by those points.
 
 
@@ -16,29 +16,23 @@ git clone git@bitbucket.org:pawelgniewek/rndmesh.git
 git pull origin master
 ```
 
-COMPILING AND INSTALLATION - LINUX
+COMPILING AND INSTALLATION - UNIX
 ==================================================
 
-* gfortran
-On Ubuntu you can install it by running:
+* build a library by typing:
 ```
-apt-get install gfortran
-```
-
-* compile by:
-```
-./build_lib.sh
+make
 ```
 
-USAGE
+LICENSE
 =====
-The lirbary is open-source. If you want to cite the library in any pubished work please contact me at
+The library is open-source. If you want to cite the library in any published work please contact me at
 pawel.gniewek@berkeley.edu for an information about credits. 
 
 
 COPYRIGHT NOTICE
 ================
-Copyright (C) 2014-2016,  Pawel Gniewek  
+Copyright (C) 2016-2017,  Pawel Gniewek  
 Email  : pawel.gniewek@berkeley.edu  
 All rights reserved.  
 License: BSD  

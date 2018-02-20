@@ -1,7 +1,7 @@
 DESCRIPTION
 ==================================================
 The ```rndmesh``` library, using Simulated Annealing Monte Carlo, generates points on a sphere and
-triangulates the surface with the vertices defined by those points.
+triangulates the surface with the vertices defined by these points.
 
 
 GETTING THE CODE
@@ -19,12 +19,12 @@ git pull origin master
 COMPILING AND INSTALLATION - UNIX
 ==================================================
 
-* build a library by typing:
+* To build a library by typing:
 ```
 make
 ```
 
-* install in /usr/local directory (requires a root access):
+* To install in /usr/local directory (requires a root access):
 ```
 make install
 ```
@@ -56,8 +56,9 @@ int n_steps = 100;          // 100 MC steps per each temperatur annealing
 int n_anneals = 100;        // 100 annealings 
 double T_min = 1.0;         // END temperture
 double T_max = 500.0;       // START temperature
-double scaled_sigma = 0.1; // Particle's radius 
+double scaled_sigma = 0.1;  // Particle's radius 
 
+// Define auxiliary data
 int nrow = 6;
 double* xyz = new double[3 * n_];
 int* ltri = new int[nrow * 2 * (n_ - 2)];

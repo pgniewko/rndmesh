@@ -37,6 +37,11 @@ USAGE - EXE file
 make exe
 ```
 
+* To run the exe file type in a command line (refer the code snippet below for the meaning of the arguments):
+```
+./run_rndmesh  100 50 50 0.1 10 0.25
+```
+
 The command will result with a binary file run_rndmesh. Execute this file to run an exemplary simulation.
 
 * An example of how to use the rndmesh library: 

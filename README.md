@@ -8,7 +8,7 @@ GETTING THE CODE
 ==================================================
 * To get the code:
 ```
-git clone git@bitbucket.org:pawelgniewek/rndmesh.git
+git clone git@github.com:pgniewko/rndmesh.git
 ```
 
 * To obtain the most recent version of the code:
@@ -56,12 +56,12 @@ unsigned long init[4]={(unsigned long)rand(), (unsigned long)rand(), (unsigned l
 init_by_array(init, length);
 
 // Provide parameters for the simulation
-int n_ = 1000;              // Simulate 1000 particles on the sphere
-int n_steps = 100;          // 100 MC steps per each temperatur annealing
-int n_anneals = 100;        // 100 annealings 
-double T_min = 1.0;         // END temperture
-double T_max = 500.0;       // START temperature
-double scaled_sigma = 0.1;  // Particle's radius 
+int n_ = 1000;              // 1st: Simulate 1000 particles on the sphere
+int n_steps = 100;          // 2nd: 100 MC steps per each temperatur annealing
+int n_anneals = 100;        // 3rd: 100 annealings 
+double T_min = 1.0;         // 4th: END temperture
+double T_max = 500.0;       // 5th: START temperature
+double scaled_sigma = 0.1;  // 6th: Particle's radius 
 
 // Define auxiliary data
 int nrow = 6;
@@ -87,8 +87,8 @@ pawel.gniewek@berkeley.edu for an information about credits or check my [website
 COPYRIGHT NOTICE
 ================
 Copyright (C) 2016-2018,  Pawel Gniewek  
-Email  : pawel.gniewek@berkeley.edu  
-All rights reserved.  
+Email  : gniewko.pablo@gmail.com     
+All rights reserved.   
 License: BSD  
 
 

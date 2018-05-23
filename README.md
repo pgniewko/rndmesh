@@ -82,7 +82,7 @@ traingulate_points(n_, xyz, ltri);
 LICENSE
 =====
 The library is open-source. If you want to cite the library in any published work please contact me at
-pawel.gniewek@berkeley.edu for an information about credits or check my [website](http://meetpg.pl/notes.html).
+gniewko.pablo@gmail.com for an information about credits or check my [website](http://meetpg.pl/notes.html).
 
 COPYRIGHT NOTICE
 ================

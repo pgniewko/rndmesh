@@ -1,18 +1,20 @@
 RM          := rm -f
 MKDIR	    := mkdir -p
 # C compiler
-CC	     	:= g++-4.9
-F90 		:= gfortran-4.9
+C	     	:= g++
+CXX	     	:= g++
+F90 		:= gfortran
 
 STATIC		:=librndmesh.a
 EXE			:=run_rndmesh
 
 SRC			:=./src
 INCLUDE     :=/Users/pawel/include
+LD_LIBS     :=/usr/local/Cellar/gcc/7.1.0/lib/gcc/7
 
 CFLAGS 		:= -O3 -I$(INCLUDE)
-CXXFLAGS	:= -O3 -std=gnu++11 -I$(INCLUDE)
-LDLIBS   	:= -lrndmesh -lgfortran
+CXXFLAGS	:= -O3 -std=gnu++11 -L$(LD_LIBS) -I$(INCLUDE) -DFAST
+LDLIBS   	:= -lrndmesh -lnblists -lgfortran
 
 SOURCES	     := $(shell find $(SRC) -type f -name "*.cpp" -or -name "*.c" -or -name "*.f90")
 
@@ -29,15 +31,15 @@ $(STATIC): $(OBJECTS)
 
 $(EXE): main.cpp
 	@echo [Building exe]
-	$(CC) -o $@ $^ $(CXXFLAGS) -I$(SRC) $(LDLIBS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) -I$(SRC) $(LDLIBS)
 
 %.o: %.cpp %.h
 	@echo [Compile C++ files] $<
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(CXX) -c $(CFLAGS) $< -o $@
 
 %.o: %.c %.h
 	@echo [Compile C files] $<
-	$(CC) -c $(CFLAGS) $< -o $@
+	$(C) -c $(CFLAGS) $< -o $@
 
 %.o: %.f90
 	@echo [Compile f90 files] $<

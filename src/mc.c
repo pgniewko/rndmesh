@@ -1,5 +1,7 @@
 #include "mc.h"
 
+int POTENTIAL_CUTTOFF = 3;
+
 int rand_int(int a, int b) 
 {
    return (int)( (b - a + 1) * uniform() ) + a;
@@ -74,7 +76,7 @@ void generate_n_random(int n, double* xv, double* yv, double* zv)
     return;
 }
 
-void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
+void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power, domain_list_t& dl)
 {
     int pidx;
     double enix_before = 0.0;
@@ -86,14 +88,13 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
     for (int i = 0; i < n; i++)
     {
         pidx = rand_int(0, n-1);
-        enix_before = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power);
+        enix_before = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power, dl);
         
         x_old = x[pidx];
         y_old = y[pidx];
         z_old = z[pidx];
-//        random_rotation(&x[pidx], &y[pidx], &z[pidx]);
         small_displacement(&x[pidx], &y[pidx], &z[pidx], sigma);
-        enix_after = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power);
+        enix_after = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power, dl);
         dE = enix_after - enix_before;
 
         acc = std::min(exp(-dE/T), 1.0 );
@@ -101,6 +102,9 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
         if (p < acc)
         {
             counter++;
+// #ifdef FAST
+            dl.update_domain_for_node(x[pidx], y[pidx], z[pidx], pidx);
+// #endif
         }
         else
         {
@@ -113,18 +117,18 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
     return;
 }
 
-double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int power)
+double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int power, domain_list_t& dl)
 {  
     double en = 0.0;
     for (int i = 0; i < n; i++)
     {
-        en += 0.5 * calc_atomic_rep_energy( x, y, z, n, i, sigma, power );
+        en += 0.5 * calc_atomic_rep_energy( x, y, z, n, i, sigma, power, dl);
     }
 
     return en;
 }
 
-double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, double sigma, int power)
+double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, double sigma, int power, domain_list_t& dl)
 {
     int power_by_2 = power / 2;
         
@@ -136,14 +140,23 @@ double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, d
     double sigm_by_r_pow;
     double sigma2 = sigma*sigma;
 
-    double rc = 3.0*sigma;
+    double rc = POTENTIAL_CUTTOFF*sigma;
     double rc2 = rc*rc;
     double Vc = pow( (sigma2 / rc2) , power_by_2);
 
-    for (int i = 0; i < n; i++)
+
+//#ifdef FAST
+    std::vector<int> my_neigs = dl.get_nb_lists(idx);
+    int i;
+    for (int j = 0; j < my_neigs.size(); j++)
     {
-       if (i != idx )
-       {
+        i =  my_neigs[j];
+// #else
+//   for (int i = 0; i < n; i++)
+//   {
+// #endif
+        if (i != idx )
+        {
             dx = x[i] - x[idx];
             r2 = dx*dx;
             if (r2 >= rc2)
@@ -170,7 +183,18 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
 {
     double mult_T = log(Tmax / Tmin) / (n_anneals - 1);
     double T = Tmax;
- 
+
+    // Linked-list defs
+    double EPS = 1e-6;
+    double DL_SIGMA = POTENTIAL_CUTTOFF * sigma;
+    int M = (1.0 - (-1.0) + 2*EPS) / DL_SIGMA;
+    domain_list_t dl(M, false);
+    dl.set_system_dims(-1-EPS, 1+EPS, 0);
+    dl.set_system_dims(-1-EPS, 1+EPS, 1);
+    dl.set_system_dims(-1-EPS, 1+EPS, 2);
+    dl.get_nb_lists(x,y,z,n,DL_SIGMA); // init run
+    //
+
     int acc = 0;
 
     for (int i = 0; i < n_anneals; i++)
@@ -178,11 +202,11 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
         acc = 0;
         for(int j = 0; j < n_steps; j ++)
         {
-            mc_step(x, y, z, n, sigma, T, acc, 8);
+            mc_step(x, y, z, n, sigma, T, acc, 8, dl);
         }
 
         T = Tmax * exp(-mult_T * i);
     }
     
-    return calc_rep_energy(x, y, z, n, sigma, 8);
+    return calc_rep_energy(x, y, z, n, sigma, 8, dl);
 }

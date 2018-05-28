@@ -5,7 +5,8 @@ int main(int argc, char** argv)
 {
 
     srand (time(NULL));
-    unsigned long init[4]={(unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand()}, length=4;
+    //unsigned long init[4]={(unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand()}, length=4;
+    unsigned long init[4]={(unsigned long)123, (unsigned long)234, (unsigned long)345, (unsigned long)456}, length=4;
     init_by_array(init, length);
     
     int n_ = atoi (argv[1]);
@@ -20,7 +21,6 @@ int main(int argc, char** argv)
     int* ltri = new int[nrow * 2 * (n_ - 2)];
     
     double energy;
-  
 
     std::cerr << "n = " << n_ << std::endl;
     std::cerr << "n_steps = " << n_steps << std::endl;
@@ -29,7 +29,6 @@ int main(int argc, char** argv)
     std::cerr << "T_max = " << T_max << std::endl;
     std::cerr << "scaled_sigma = " << scaled_sigma << std::endl;
     
-
     energy = generate_random_points(n_, xyz, n_steps, n_anneals, T_min, T_max, scaled_sigma);
     traingulate_points(n_, xyz, ltri);
 

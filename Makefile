@@ -12,8 +12,9 @@ SRC			:=./src
 INCLUDE     :=/Users/pawel/include
 LD_LIBS     :=/usr/local/Cellar/gcc/7.1.0/lib/gcc/7
 
-CFLAGS 		:= -O3 -I$(INCLUDE)
-CXXFLAGS	:= -O3 -std=gnu++11 -L$(LD_LIBS) -I$(INCLUDE) -DFAST
+FASTFLAG    := -DFAST
+CFLAGS 		:= -O3 -I$(INCLUDE) $(FASTFLAG)
+CXXFLAGS	:= -O3 -std=gnu++11 -L$(LD_LIBS) -I$(INCLUDE) $(FASTFLAG)
 LDLIBS   	:= -lrndmesh -lnblists -lgfortran
 
 SOURCES	     := $(shell find $(SRC) -type f -name "*.cpp" -or -name "*.c" -or -name "*.f90")

@@ -3,7 +3,11 @@
 
 int main(int argc, char** argv)
 {
-
+#ifdef FAST
+    std::cout << "RUNNING PERFORMANCE OPTIMIZED CODE"<< std::endl;
+#else
+    std::cout << "RUNNING >>NOT<< PERFORMANCE OPTIMIZED CODE"<< std::endl;
+#endif
     srand (time(NULL));
     //unsigned long init[4]={(unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand(), (unsigned long)rand()}, length=4;
     unsigned long init[4]={(unsigned long)123, (unsigned long)234, (unsigned long)345, (unsigned long)456}, length=4;

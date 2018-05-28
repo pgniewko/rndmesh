@@ -76,7 +76,11 @@ void generate_n_random(int n, double* xv, double* yv, double* zv)
     return;
 }
 
+#ifdef FAST
 void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power, domain_list_t& dl)
+#else
+void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int& counter, int power)
+#endif
 {
     int pidx;
     double enix_before = 0.0;
@@ -88,13 +92,21 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
     for (int i = 0; i < n; i++)
     {
         pidx = rand_int(0, n-1);
+#ifdef FAST
         enix_before = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power, dl);
-        
+#else
+        enix_before = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power);
+#endif
+
         x_old = x[pidx];
         y_old = y[pidx];
         z_old = z[pidx];
         small_displacement(&x[pidx], &y[pidx], &z[pidx], sigma);
+#ifdef FAST
         enix_after = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power, dl);
+#else
+        enix_after = calc_atomic_rep_energy( x, y, z, n, pidx, sigma, power);
+#endif
         dE = enix_after - enix_before;
 
         acc = std::min(exp(-dE/T), 1.0 );
@@ -102,9 +114,9 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
         if (p < acc)
         {
             counter++;
-// #ifdef FAST
+#ifdef FAST
             dl.update_domain_for_node(x[pidx], y[pidx], z[pidx], pidx);
-// #endif
+#endif
         }
         else
         {
@@ -117,18 +129,30 @@ void mc_step(double* x, double* y, double* z, int n, double sigma, double T, int
     return;
 }
 
+#ifdef FAST
 double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int power, domain_list_t& dl)
+#else
+double calc_rep_energy(double* x, double* y, double* z, int n, double sigma, int power)
+#endif
 {  
     double en = 0.0;
     for (int i = 0; i < n; i++)
     {
+#ifdef FAST 
         en += 0.5 * calc_atomic_rep_energy( x, y, z, n, i, sigma, power, dl);
+#else
+        en += 0.5 * calc_atomic_rep_energy( x, y, z, n, i, sigma, power);
+#endif
     }
 
     return en;
 }
 
+#ifdef FAST
 double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, double sigma, int power, domain_list_t& dl)
+#else
+double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, double sigma, int power)
+#endif
 {
     int power_by_2 = power / 2;
         
@@ -145,16 +169,16 @@ double calc_atomic_rep_energy(double* x, double* y, double* z, int n, int idx, d
     double Vc = pow( (sigma2 / rc2) , power_by_2);
 
 
-//#ifdef FAST
+#ifdef FAST
     std::vector<int> my_neigs = dl.get_nb_lists(idx);
     int i;
     for (int j = 0; j < my_neigs.size(); j++)
     {
         i =  my_neigs[j];
-// #else
-//   for (int i = 0; i < n; i++)
-//   {
-// #endif
+#else
+    for (int i = 0; i < n; i++)
+    {
+#endif
         if (i != idx )
         {
             dx = x[i] - x[idx];
@@ -184,6 +208,7 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
     double mult_T = log(Tmax / Tmin) / (n_anneals - 1);
     double T = Tmax;
 
+#ifdef FAST
     // Linked-list defs
     double EPS = 1e-6;
     double DL_SIGMA = POTENTIAL_CUTTOFF * sigma;
@@ -194,6 +219,7 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
     dl.set_system_dims(-1-EPS, 1+EPS, 2);
     dl.get_nb_lists(x,y,z,n,DL_SIGMA); // init run
     //
+#endif
 
     int acc = 0;
 
@@ -202,11 +228,19 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
         acc = 0;
         for(int j = 0; j < n_steps; j ++)
         {
+#ifdef FAST
             mc_step(x, y, z, n, sigma, T, acc, 8, dl);
+#else
+            mc_step(x, y, z, n, sigma, T, acc, 8);
+#endif
         }
 
         T = Tmax * exp(-mult_T * i);
     }
-    
+   
+#ifdef FAST
     return calc_rep_energy(x, y, z, n, sigma, 8, dl);
+#else
+    return calc_rep_energy(x, y, z, n, sigma, 8);
+#endif
 }

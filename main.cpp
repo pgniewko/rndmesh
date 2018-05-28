@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <rndmesh.h>
+#include <ctime>
 
 int main(int argc, char** argv)
 {
@@ -26,17 +27,23 @@ int main(int argc, char** argv)
     
     double energy;
 
-    std::cerr << "n = " << n_ << std::endl;
-    std::cerr << "n_steps = " << n_steps << std::endl;
-    std::cerr << "n_anneals = " << n_anneals << std::endl;
-    std::cerr << "T_min = " << T_min << std::endl;
-    std::cerr << "T_max = " << T_max << std::endl;
-    std::cerr << "scaled_sigma = " << scaled_sigma << std::endl;
+    std::cerr << "n= "             << n_           << " ";// << std::endl;
+    std::cerr << "n_steps= "       << n_steps      << " ";// << std::endl;
+    std::cerr << "n_anneals= "     << n_anneals    << " ";// << std::endl;
+    std::cerr << "T_min= "         << T_min        << " ";// << std::endl;
+    std::cerr << "T_max= "         << T_max        << " ";// << std::endl;
+    std::cerr << "scaled_sigma= "  << scaled_sigma << " ";// << std::endl;
     
+
+	// Time the execution of the code 
+    int start_s = clock();
     energy = generate_random_points(n_, xyz, n_steps, n_anneals, T_min, T_max, scaled_sigma);
+    int stop_s = clock();
+    std::cerr << "time= " << (stop_s-start_s) / double(CLOCKS_PER_SEC)*1000 << std::endl;
+    
+    // Triangulate points 
     traingulate_points(n_, xyz, ltri);
 
-    
     double* x_vec = new double[n_];
     double* y_vec = new double[n_];
     double* z_vec = new double[n_];

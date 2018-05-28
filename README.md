@@ -16,6 +16,11 @@ git clone git@github.com:pgniewko/rndmesh.git
 git pull origin master
 ```
 
+DEPENDENCIES
+============
+* Linked-lists: [nblists](https://github.com/pgniewko/nblists)
+
+
 COMPILING AND INSTALLATION - UNIX
 ==================================================
 
@@ -28,6 +33,11 @@ make
 ```
 make install
 ```
+
+* A successful compilation requires ```nblists``` library. If the library is not installed
+the code can be compiled as a stand-alone software by commenting ```-DFAST``` flag in ```Makefile```.
+This will bring the computational performance down as the code will be executed in O(N^2) time.
+
 
 USAGE - EXE file
 ==================================================

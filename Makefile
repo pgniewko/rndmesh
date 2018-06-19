@@ -1,8 +1,8 @@
 RM          := rm -f
 MKDIR	    := mkdir -p
 # C compiler
-C	     	:= g++
-CXX	     	:= g++
+CC	     	:= g++-4.9
+CXX	     	:= g++-4.9
 F90 		:= gfortran
 
 STATIC		:=librndmesh.a
@@ -13,7 +13,8 @@ INCLUDE     :=/Users/pawel/include
 LD_LIBS     :=/usr/local/Cellar/gcc/7.1.0/lib/gcc/7
 
 FASTFLAG    := -DFAST
-CFLAGS 		:= -O3 -I$(INCLUDE) $(FASTFLAG)
+FFLAGS 		:= -O3 -I$(INCLUDE) $(FASTFLAG)
+CFLAGS 		:= -O3 -std=gnu++11 -I$(INCLUDE) $(FASTFLAG)
 CXXFLAGS	:= -O3 -std=gnu++11 -L$(LD_LIBS) -I$(INCLUDE) $(FASTFLAG)
 LDLIBS   	:= -lrndmesh -lnblists -lgfortran
 
@@ -40,11 +41,11 @@ $(EXE): main.cpp
 
 %.o: %.c %.h
 	@echo [Compile C files] $<
-	$(C) -c $(CFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 %.o: %.f90
 	@echo [Compile f90 files] $<
-	$(F90) -c $(CFLAGS) $< -o $@
+	$(F90) -c $(FFLAGS) $< -o $@
 
 PHONY: exe build clean install
 

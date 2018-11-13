@@ -217,7 +217,14 @@ double run_annealing(double* x, double* y, double* z, int n, int n_steps, int n_
     dl.set_system_dims(-1-EPS, 1+EPS, 0);
     dl.set_system_dims(-1-EPS, 1+EPS, 1);
     dl.set_system_dims(-1-EPS, 1+EPS, 2);
-    dl.get_nb_lists(x,y,z,n,DL_SIGMA); // init run
+    dbl_vec x_wrapper, y_wrapper, z_wrapper;
+    for (int i = 0; i < n; i++)
+    {
+        x_wrapper.push_back( x[i] );
+        y_wrapper.push_back( y[i] );
+        z_wrapper.push_back( z[i] );
+    }
+    dl.get_nb_lists(x_wrapper,y_wrapper,z_wrapper,n,DL_SIGMA); // init run
     //
 #endif
 

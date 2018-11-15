@@ -1,21 +1,22 @@
 RM          := rm -f
 MKDIR	    := mkdir -p
 # C compiler
-CC	     	:= g++-4.9
-CXX	     	:= g++-4.9
+CC	     	:= g++-7
+CXX	     	:= g++-7
 F90 		:= gfortran
 
 STATIC		:=librndmesh.a
 EXE			:=run_rndmesh
 
 SRC			:=./src
-INCLUDE     :=/Users/pawel/include
-LD_LIBS     :=/usr/local/Cellar/gcc/7.1.0/lib/gcc/7
+PREFIX      :=/usr/local
+INCLUDE     :=$(PREFIX)/include
+LIBS        :=$(PREFIX)/lib
 
-FASTFLAG    := -DFAST
+FASTFLAG    := #-DFAST
 FFLAGS 		:= -O3 -I$(INCLUDE) $(FASTFLAG)
 CFLAGS 		:= -O3 -std=gnu++11 -I$(INCLUDE) $(FASTFLAG)
-CXXFLAGS	:= -O3 -std=gnu++11 -L$(LD_LIBS) -I$(INCLUDE) $(FASTFLAG)
+CXXFLAGS	:= -O3 -std=gnu++11 -L$(LIBS) -I$(INCLUDE) $(FASTFLAG)
 LDLIBS   	:= -lrndmesh -lnblists -lgfortran
 
 SOURCES	     := $(shell find $(SRC) -type f -name "*.cpp" -or -name "*.c" -or -name "*.f90")
@@ -23,8 +24,6 @@ SOURCES	     := $(shell find $(SRC) -type f -name "*.cpp" -or -name "*.c" -or -n
 HEADERS	     := $(shell find $(SRC) -type f -name "*.h" -not -name "fastmath.h" )
 
 OBJECTS      := $(patsubst %.cpp,%.o,$(patsubst %.c,%.o, $(patsubst %.f90,%.o, $(SOURCES) )))
-
-PREFIX   := /usr/local
 
 $(STATIC): $(OBJECTS)
 	@echo "[Link (Static)]"
@@ -60,5 +59,5 @@ clean:
 
 install: $(STATIC)
 	@echo [Installing] $<
-	sudo install -m 755 $(STATIC) $(PREFIX)/lib
-	sudo install -m 755 $(HEADERS) $(PREFIX)/include
+	sudo install -m 755 $(STATIC) $(LIBS) 
+	sudo install -m 755 $(HEADERS) $(INCLUDE) 

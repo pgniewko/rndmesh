@@ -1,3 +1,5 @@
+>Disclaimer: This is special purpose software and it may not be robust in all applications or outside the parameter regime in which it was originally developed.
+
 DESCRIPTION
 ==================================================
 The ```rndmesh``` library, using Simulated Annealing Monte Carlo, generates points on a sphere and
@@ -104,10 +106,5 @@ License: BSD 3
 
 REFERENCES
 ===============
-Delaunay Triangulation on a Sphere follows STRIPACK implementation. 
-Please refer to the following paper for more details:
-    
-Robert Renka,
-Algorithm 772: STRIPACK: Delaunay Triangulation and Voronoi Diagram on the Surface of a Sphere,
-ACM Transactions on Mathematical Software,
-Volume 23, Number 3, September 1997, pages 416-434.
+1. "Mechanics of Confined Microbial Populations", P. Gniewek, PhD Thesis, UC Berkeley (2018)
+2. "Algorithm 772: STRIPACK: Delaunay Triangulation and Voronoi Diagram on the Surface of a Sphere", R. Renka, 23(3) 416-434, ACM Transactions on Mathematical Software (1997)

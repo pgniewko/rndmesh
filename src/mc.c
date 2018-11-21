@@ -93,9 +93,9 @@ void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power
     {
         pidx = rand_int(0, n-1);
 #ifdef FAST
-        enix_before = calc_atomic_rep_energy( xyz, n, pidx, sigma, power, dl);
+        enix_before = calc_atomic_rep_energy(xyz, n, pidx, sigma, power, dl);
 #else
-        enix_before = calc_atomic_rep_energy( xyz, n, pidx, sigma, power);
+        enix_before = calc_atomic_rep_energy(xyz, n, pidx, sigma, power);
 #endif
 
         x_old = xyz[3 * pidx + 0];
@@ -115,6 +115,7 @@ void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power
         {
             counter++;
 #ifdef FAST
+            // UPDATE LINKED-DOMAINS UPON MOVE ACCEPTANCE
             dl.update_domain_for_node(xyz[3 * pidx + 0], xyz[3 * pidx + 1], xyz[3 * pidx + 2], pidx);
 #endif
         }
@@ -179,22 +180,22 @@ double calc_atomic_rep_energy(double* xyz, int n, int idx, double sigma, int pow
     for (int i = 0; i < n; i++)
     {
 #endif
-        if (i != idx )
+        if (i != idx)
         {
-            dx = xyz[3*i+0] - xyz[3*idx+0];
-            r2 = dx*dx;
+            dx = xyz[3 * i + 0] - xyz[3 * idx + 0];
+            r2 = dx * dx;
             if (r2 >= rc2)
                 continue;
-            dy = xyz[3*i+1] - xyz[3*idx+1];
-            r2 += dy*dy;
+            dy = xyz[3 * i + 1] - xyz[3 * idx + 1];
+            r2 += dy * dy;
             if (r2 >= rc2)
                 continue;
-            dz = xyz[3*i+2] - xyz[3*idx+2];
-            r2 += dz*dz;
+            dz = xyz[3 * i + 2] - xyz[3 * idx + 2];
+            r2 += dz * dz;
             if (r2 >= rc2)
                 continue;
 
-            sigm_by_r_pow = pow( (sigma2 / r2) , power_by_2 ) - Vc;
+            sigm_by_r_pow = pow((sigma2 / r2), power_by_2) - Vc;
             en += sigm_by_r_pow;
        }
     }

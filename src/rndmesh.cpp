@@ -69,18 +69,12 @@ void traingulate_points(int n_, double* xyz, int* ltri)
     return;
 }
 
-double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_)
+double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneals_, double T_min_, double T_max_, double sigma_)
 {
     double energy;
-
-    int n_steps = n_steps_;
-    int n_anneals = n_anneal_;
-    double Tmax = T_max_;
-    double Tmin = T_min_;
-    double sigma = sigma_;
     
     generate_n_random(n_, xyz);
-    energy = run_annealing(xyz, n_, n_steps, n_anneals, Tmin, Tmax, sigma);
+    energy = run_annealing(xyz, n_, n_steps_, n_anneals_, T_min_, T_max_, sigma_);
 
     return energy;
 }

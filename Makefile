@@ -13,7 +13,7 @@ PREFIX      :=/usr/local
 INCLUDE     :=$(PREFIX)/include
 LIBS        :=$(PREFIX)/lib
 
-FASTFLAG    := #-DFAST
+FASTFLAG    := -DFAST
 FFLAGS 		:= -O3 -I$(INCLUDE) $(FASTFLAG)
 CFLAGS 		:= -O3 -std=gnu++11 -I$(INCLUDE) $(FASTFLAG)
 CXXFLAGS	:= -O3 -std=gnu++11 -L$(LIBS) -I$(INCLUDE) $(FASTFLAG)

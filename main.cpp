@@ -43,21 +43,10 @@ int main(int argc, char** argv)
     // Triangulate points 
     traingulate_points(n_, xyz, ltri);
 
-    double* x_vec = new double[n_];
-    double* y_vec = new double[n_];
-    double* z_vec = new double[n_];
-
-    for (int i = 0; i < n_; i++)
-    {
-        x_vec[i] = xyz[3 * i + 0];
-        y_vec[i] = xyz[3 * i + 1];
-        z_vec[i] = xyz[3 * i + 2];
-    }
-
     std::cout << n_ << " " << energy << std::endl;
     for (int i = 0; i < n_; i++)
     {
-        std::cout << x_vec[i] << " " << y_vec[i] << " " << z_vec[i] << std::endl;
+        std::cout << xyz[3 * i + 0] << " " << xyz[3 * i + 1] << " " << xyz[3 * i + 2] << std::endl;
     }
 
     std::cout << std::endl;
@@ -69,10 +58,6 @@ int main(int argc, char** argv)
 
     delete[] xyz;
     delete[] ltri;
-    
-    delete[] x_vec;
-    delete[] y_vec;
-    delete[] z_vec;
 
     return 0;
 }

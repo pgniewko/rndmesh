@@ -1,43 +1,5 @@
 #include "rndmesh.h"
 
-
-double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_)
-{
-    double energy;
-
-    int* n = new int;
-    *n = n_;
-
-    double* x_vec = new double[*n];
-    double* y_vec = new double[*n];
-    double* z_vec = new double[*n];
-
-    int n_steps = n_steps_;
-    int n_anneals = n_anneal_;
-    double Tmax = T_max_;
-    double Tmin = T_min_;
-    double sigma = sigma_;
-    
-    generate_n_random(n_, x_vec, y_vec, z_vec);
-    energy = run_annealing(x_vec, y_vec, z_vec, n_, n_steps, n_anneals, Tmin, Tmax, sigma);
-
-    for (int i = 0; i < n_; i++)
-    {
-        xyz[3*i + 0] = x_vec[i];
-        xyz[3*i + 1] = y_vec[i];
-        xyz[3*i + 2] = z_vec[i];
-    }
-
-    delete n;
-
-    delete[] x_vec;
-    delete[] y_vec;
-    delete[] z_vec;
-
-    return energy;
-}
-
-
 void traingulate_points(int n_, double* xyz, int* ltri)
 {
 
@@ -107,6 +69,21 @@ void traingulate_points(int n_, double* xyz, int* ltri)
     return;
 }
 
+double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_)
+{
+    double energy;
+
+    int n_steps = n_steps_;
+    int n_anneals = n_anneal_;
+    double Tmax = T_max_;
+    double Tmin = T_min_;
+    double sigma = sigma_;
+    
+    generate_n_random(n_, xyz);
+    energy = run_annealing(xyz, n_, n_steps, n_anneals, Tmin, Tmax, sigma);
+
+    return energy;
+}
 
 double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_)
 {
@@ -118,21 +95,10 @@ double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, 
     
     energy = generate_random_points(n_, xyz, n_steps_, n_anneal_, T_min_, T_max_, sigma_);    
     traingulate_points(n_, xyz, ltri);
-
-    double* x_vec = new double[n_];
-    double* y_vec = new double[n_];
-    double* z_vec = new double[n_];
-
-    for (int i = 0; i < n_; i++)
-    {
-        x_vec[i] = xyz[3 * i + 0];
-        y_vec[i] = xyz[3 * i + 1];
-        z_vec[i] = xyz[3 * i + 2];
-    }
     
     for (int i = 0; i < n_; i++)
     {
-        std::cout << "H "<< x_vec[i] << " " << y_vec[i] << " " << z_vec[i] << "\n";
+        std::cout << "H " << xyz[3 * i + 0] << " " << xyz[3 * i + 1] << " " << xyz[3 * i + 2] << "\n";
     }
 
     std::cout << std::endl;
@@ -143,10 +109,6 @@ double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, 
     }
 
     delete[] xyz;
-    delete[] x_vec;
-    delete[] y_vec;
-    delete[] z_vec;
-
     delete[] ltri;
 
     return energy;

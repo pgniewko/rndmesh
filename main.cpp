@@ -4,6 +4,11 @@
 
 int main(int argc, char** argv)
 {
+    if (argc != 7)
+    {
+        std::cerr << "THE CODE REQUIRES 7 ARGUMENTS"<< std::endl;
+        return 0;
+    }
 #ifdef FAST
     std::cout << "RUNNING PERFORMANCE OPTIMIZED CODE"<< std::endl;
 #else

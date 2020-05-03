@@ -1,8 +1,8 @@
 RM          := rm -f
 MKDIR	    := mkdir -p
 # C compiler
-CC	     	:= g++-7
-CXX	     	:= g++-7
+CC	     	:= g++-9
+CXX	     	:= g++-9
 F90 		:= gfortran
 
 STATIC		:=librndmesh.a

@@ -1,8 +1,7 @@
 #include "rndmesh.h"
 
-void traingulate_points(int n_, double* xyz, int* ltri)
+void traingulate_points(int n_, double* xyz, int* ltri, double rx, double ry, double rz)
 {
-
     int* n = new int;
     int* nrow = new int;
     *n = n_;
@@ -12,11 +11,12 @@ void traingulate_points(int n_, double* xyz, int* ltri)
     double* y_vec = new double[*n];
     double* z_vec = new double[*n];
 
+    // Map points on a unit sphere
     for (int i = 0; i < n_; i++)
     {
-        x_vec[i] = xyz[3 * i + 0];
-        y_vec[i] = xyz[3 * i + 1];
-        z_vec[i] = xyz[3 * i + 2];
+        x_vec[i] = xyz[3 * i + 0] / rx;
+        y_vec[i] = xyz[3 * i + 1] / ry;
+        z_vec[i] = xyz[3 * i + 2] / rz;
     }
 
     int* list = new int[6*(*n-2)];
@@ -69,17 +69,18 @@ void traingulate_points(int n_, double* xyz, int* ltri)
     return;
 }
 
-double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneals_, double T_min_, double T_max_, double sigma_)
+
+double generate_random_points(int n_, double* xyz, int n_steps_, int n_anneals_, double T_min_, double T_max_, double sigma_, double rx, double ry, double rz)
 {
     double energy;
-    
-    generate_n_random(n_, xyz);
-    energy = run_annealing(xyz, n_, n_steps_, n_anneals_, T_min_, T_max_, sigma_);
 
+    generate_n_random(n_, xyz, rx, ry, rz);
+    energy = run_annealing(xyz, n_, n_steps_, n_anneals_, T_min_, T_max_, sigma_, rx, ry, rz);
     return energy;
 }
 
-double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_)
+
+double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, double T_max_, double sigma_, double rx, double ry, double rz)
 {
     double energy;
 
@@ -87,9 +88,9 @@ double generate_random_mesh(int n_, int n_steps_, int n_anneal_, double T_min_, 
     double* xyz = new double[3 * n_];
     int* ltri = new int[nrow * 2 * (n_ - 2)];
     
-    energy = generate_random_points(n_, xyz, n_steps_, n_anneal_, T_min_, T_max_, sigma_);    
-    traingulate_points(n_, xyz, ltri);
-    
+    energy = generate_random_points(n_, xyz, n_steps_, n_anneal_, T_min_, T_max_, sigma_, rx, ry, rz);    
+    traingulate_points(n_, xyz, ltri, rx, ry, rz);
+
     for (int i = 0; i < n_; i++)
     {
         std::cout << "H " << xyz[3 * i + 0] << " " << xyz[3 * i + 1] << " " << xyz[3 * i + 2] << "\n";

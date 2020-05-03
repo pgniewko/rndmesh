@@ -7,22 +7,31 @@ int rand_int(int a, int b)
    return (int)( (b - a + 1) * uniform() ) + a;
 }
 
-void small_displacement(double* x, double* y, double* z, double sigma)
+void small_displacement(double* x, double* y, double* z, double sigma, double rx, double ry, double rz)
 {
+    *x /= rx;
+    *y /= ry;
+    *z /= rz;
+
     double del_ = 0.25 * sigma;
     *x += uniform(-del_, del_);
     *y += uniform(-del_, del_);
     *z += uniform(-del_, del_);
 
+
     double dx_2, dy_2, dz_2, r;
     dx_2 = (*x)*(*x);
     dy_2 = (*y)*(*y);
     dz_2 = (*z)*(*z);
-   
     r = sqrt(dx_2 + dy_2 +  dz_2);
     *x /= r;
     *y /= r;
     *z /= r;
+
+    *x *= rx;
+    *y *= ry;
+    *z *= rz;
+
     return;
 }
 
@@ -67,19 +76,27 @@ void random_rotation(double* x, double* y, double* z)
     return;
 }
 
-void generate_n_random(int n, double* xyz)
+void generate_n_random(int n, double* xyz, double rx, double ry, double rz)
 {    
     for (int i = 0; i < n; i++)
     {
          random_rotation(&xyz[3*i+0], &xyz[3*i+1], &xyz[3*i+2]);
     }
+
+    // put on the ellipsoid
+    for (int i = 0; i < n; i++)
+    {
+        xyz[3*i + 0] *= rx;
+        xyz[3*i + 1] *= ry;
+        xyz[3*i + 2] *= rz;
+    }
     return;
 }
 
 #ifdef FAST
-void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power, domain_list_t& dl)
+void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power, domain_list_t& dl, double rx, double ry, double rz)
 #else
-void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power)
+void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power, double rx, double ry, double rz)
 #endif
 {
     int pidx;
@@ -101,7 +118,7 @@ void mc_step(double* xyz, int n, double sigma, double T, int& counter, int power
         x_old = xyz[3 * pidx + 0];
         y_old = xyz[3 * pidx + 1];
         z_old = xyz[3 * pidx + 2];
-        small_displacement(&xyz[3 * pidx + 0], &xyz[3 * pidx + 1], &xyz[3 * pidx + 2], sigma);
+        small_displacement(&xyz[3 * pidx + 0], &xyz[3 * pidx + 1], &xyz[3 * pidx + 2], sigma, rx, ry, rz);
 #ifdef FAST
         enix_after = calc_atomic_rep_energy(xyz, n, pidx, sigma, power, dl);
 #else
@@ -204,7 +221,8 @@ double calc_atomic_rep_energy(double* xyz, int n, int idx, double sigma, int pow
     return en;
 }
 
-double run_annealing(double* xyz, int n, int n_steps, int n_anneals, double Tmin, double Tmax, double sigma)
+
+double run_annealing(double* xyz, int n, int n_steps, int n_anneals, double Tmin, double Tmax, double sigma, double rx, double ry, double rz)
 {
     double mult_T = log(Tmax / Tmin) / (n_anneals - 1);
     double T = Tmax;
@@ -212,12 +230,16 @@ double run_annealing(double* xyz, int n, int n_steps, int n_anneals, double Tmin
 #ifdef FAST
     // Linked-list defs
     double EPS = 1e-6;
+
+    double max_size =  std::max(rx, ry);
+    max_size = std::max(max_size, rz);
+
     double DL_SIGMA = POTENTIAL_CUTTOFF * sigma;
     int M = (1.0 - (-1.0) + 2*EPS) / DL_SIGMA;
     domain_list_t dl(M, false);
-    dl.set_system_dims(-1-EPS, 1+EPS, 0);
-    dl.set_system_dims(-1-EPS, 1+EPS, 1);
-    dl.set_system_dims(-1-EPS, 1+EPS, 2);
+    dl.set_system_dims(-max_size-EPS, max_size+EPS, 0);
+    dl.set_system_dims(-max_size-EPS, max_size+EPS, 1);
+    dl.set_system_dims(-max_size-EPS, max_size+EPS, 2);
     dbl_vec xyz_wrapper;
     for (int i = 0; i < n; i++)
     {
@@ -231,14 +253,14 @@ double run_annealing(double* xyz, int n, int n_steps, int n_anneals, double Tmin
     int acc = 0;
 
     for (int i = 0; i < n_anneals; i++)
-    {  
+    {
         acc = 0;
         for(int j = 0; j < n_steps; j ++)
         {
 #ifdef FAST
-            mc_step(xyz, n, sigma, T, acc, 8, dl);
+            mc_step(xyz, n, sigma, T, acc, 8, dl, rx, ry, rz);
 #else
-            mc_step(xyz, n, sigma, T, acc, 8);
+            mc_step(xyz, n, sigma, T, acc, 8, rx, ry, rz);
 #endif
         }
 
